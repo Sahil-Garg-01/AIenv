@@ -6,6 +6,7 @@ pillow
 langgraph
 langchain
 langchain-openai
+langchain-google-genai
 pydantic
 python-multipart
 streamlit
@@ -13,3 +14,4 @@ tqdm
 matplotlib
 seaborn
 scikit-learn
+python-dotenv

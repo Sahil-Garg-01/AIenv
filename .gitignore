@@ -19,6 +19,9 @@ models/*.pth
 # Performance metrics and outputs
 model_perf/
 
+# Environment variables
+.env
+
 # Logs
 *.log
 
