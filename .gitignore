@@ -16,9 +16,6 @@ merged_dataset.zip
 models/*.pt
 models/*.pth
 
-# Performance metrics and outputs
-model_perf/
-
 # Environment variables
 .env
 

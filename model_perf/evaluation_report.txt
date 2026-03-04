@@ -1,0 +1,12 @@
+Classification Report
+
+                  precision    recall  f1-score   support
+
+hurricane_damage       1.00      0.98      0.99      1500
+          normal       0.98      0.99      0.99      2650
+       oil_spill       0.99      0.89      0.93       150
+        wildfire       0.99      1.00      0.99      1500
+
+        accuracy                           0.99      5800
+       macro avg       0.99      0.96      0.98      5800
+    weighted avg       0.99      0.99      0.99      5800
