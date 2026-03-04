@@ -1,15 +1,18 @@
 import os
 from dotenv import load_dotenv
+import logging
 
 load_dotenv()
 
 from langchain_google_genai import ChatGoogleGenerativeAI
 
+logger = logging.getLogger(__name__)
+
 llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash-lite", temperature=0.7)
 
 def generate_report(state):
-
     hazard = state["hazard"]
+    logger.info(f"Generating report for hazard: {hazard}")
 
     prompt = f"""
     You are an expert environmental analyst specializing in satellite-based hazard detection. Based on the following hazard detected from satellite imagery, generate a comprehensive and professional incident report suitable for environmental agencies, policymakers, and stakeholders.
@@ -26,5 +29,5 @@ def generate_report(state):
     """
 
     response = llm.invoke(prompt)
-
+    logger.info("Report generated successfully")
     return {"report": response.content}

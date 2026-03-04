@@ -7,30 +7,27 @@ import matplotlib.pyplot as plt
 from tqdm import tqdm
 import random
 import numpy as np
+import logging
 from configs.config import DATA_DIR, BATCH_SIZE, EPOCHS, LR, IMG_SIZE, SEED, MODEL_PATH, DEVICE
 from utils.preprocess import train_transform, val_transform
 from models.model import get_model
 
+logger = logging.getLogger(__name__)
+
 def train_model(data_dir=None):
+    logger.info("Starting model training")
     if data_dir is None:
         data_dir = DATA_DIR
 
-    # -----------------------------
-    # REPRODUCIBILITY
-    # -----------------------------
-
+    # Reproducibility
     torch.manual_seed(SEED)
     np.random.seed(SEED)
     random.seed(SEED)
 
-    # -----------------------------
-    # DATASET
-    # -----------------------------
-
+    # Dataset
     dataset = datasets.ImageFolder(data_dir)
-
     classes = dataset.classes
-    print("Classes:", classes)
+    logger.info(f"Classes: {classes}")
 
     train_size = int(0.8 * len(dataset))
     val_size = len(dataset) - train_size
@@ -54,18 +51,12 @@ def train_model(data_dir=None):
         num_workers=2
     )
 
-    # -----------------------------
-    # MODEL
-    # -----------------------------
-
+    # Model
     model = get_model(len(classes))
-
     model = model.to(DEVICE)
+    logger.info("Model initialized")
 
-    # -----------------------------
-    # LOSS + OPTIMIZER
-    # -----------------------------
-
+    # Loss and optimizer
     criterion = nn.CrossEntropyLoss()
 
     optimizer = optim.Adam(
@@ -80,27 +71,20 @@ def train_model(data_dir=None):
         factor=0.3
     )
 
-    # -----------------------------
-    # TRAINING LOOP
-    # -----------------------------
-
+    # Training loop
     best_val_loss = float("inf")
-
     train_losses = []
     val_losses = []
 
     for epoch in range(EPOCHS):
-
         model.train()
         running_loss = 0
 
         for images, labels in tqdm(train_loader):
-
             images = images.to(DEVICE)
             labels = labels.to(DEVICE)
 
             outputs = model(images)
-
             loss = criterion(outputs, labels)
 
             optimizer.zero_grad()
@@ -112,22 +96,16 @@ def train_model(data_dir=None):
         train_loss = running_loss / len(train_loader)
         train_losses.append(train_loss)
 
-        # ---------------------
-        # VALIDATION
-        # ---------------------
-
+        # Validation
         model.eval()
         val_loss = 0
 
         with torch.no_grad():
-
             for images, labels in val_loader:
-
                 images = images.to(DEVICE)
                 labels = labels.to(DEVICE)
 
                 outputs = model(images)
-
                 loss = criterion(outputs, labels)
 
                 val_loss += loss.item()
@@ -137,33 +115,23 @@ def train_model(data_dir=None):
 
         scheduler.step(val_loss)
 
-        print(f"\nEpoch {epoch+1}/{EPOCHS}")
-        print("Train Loss:", train_loss)
-        print("Val Loss:", val_loss)
+        logger.info(f"Epoch {epoch+1}/{EPOCHS} - Train Loss: {train_loss:.4f}, Val Loss: {val_loss:.4f}")
 
         if val_loss < best_val_loss:
-
             best_val_loss = val_loss
-
             torch.save(model.state_dict(), MODEL_PATH)
+            logger.info("Best model saved")
 
-            print("Best model saved")
-
-    # -----------------------------
-    # TRAINING CURVE
-    # -----------------------------
-
+    # Training curve
     plt.figure(figsize=(8,5))
-
     plt.plot(train_losses, label="train")
     plt.plot(val_losses, label="validation")
-
     plt.title("Training Curve")
     plt.xlabel("Epoch")
     plt.ylabel("Loss")
     plt.legend()
-
     plt.savefig("model_perf/training_curve.png")
     plt.show()
 
+    logger.info("Training completed")
     return "Training completed"
