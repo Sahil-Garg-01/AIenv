@@ -23,5 +23,6 @@ val_transform = transforms.Compose([
 ])
 
 def preprocess_image(file):
+    file.seek(0)  # Reset file pointer to the beginning
     image = Image.open(file).convert("RGB")
     return val_transform(image).unsqueeze(0)
