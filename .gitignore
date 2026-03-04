@@ -1,0 +1,35 @@
+# Virtual environment
+.vv/
+
+# Python bytecode
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Data directories and files
+dataset/
+merged_dataset/
+merged_dataset.zip
+
+# Model files
+models/*.pt
+models/*.pth
+
+# Performance metrics and outputs
+model_perf/
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Temporary files
+*.tmp
+*.temp

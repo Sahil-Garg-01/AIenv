@@ -1,0 +1,15 @@
+fastapi
+uvicorn
+torch
+torchvision
+pillow
+langgraph
+langchain
+langchain-openai
+pydantic
+python-multipart
+streamlit
+tqdm
+matplotlib
+seaborn
+scikit-learn
